@@ -1,19 +1,21 @@
 import { useEffect, useState } from "react";
 
+// TypeScript augmentation
+declare global {
+  interface Date {
+    addDays(days: number): Date;
+  }
+}
+
 Date.prototype.addDays = function (days: number): Date {
-  var date = new Date(this.valueOf());
+  const date = new Date(this.valueOf());
   date.setDate(date.getDate() + days);
   return date;
 };
 
-var date = new Date();
-
 const getReturnValues = (countDown: number) => {
-  // calculate time left
   const days = Math.floor(countDown / (1000 * 60 * 60 * 24));
-  const hours = Math.floor(
-    (countDown % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
-  );
+  const hours = Math.floor((countDown % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
   const minutes = Math.floor((countDown % (1000 * 60 * 60)) / (1000 * 60));
   const seconds = Math.floor((countDown % (1000 * 60)) / 1000);
 
@@ -21,12 +23,10 @@ const getReturnValues = (countDown: number) => {
 };
 
 const useCountdown = (targetDate: number) => {
-  var expireDate = date.addDays(targetDate);
-  const countDownDate = new Date(expireDate).getTime();
+  const expireDate = new Date().addDays(targetDate);
+  const countDownDate = expireDate.getTime();
 
-  const [countDown, setCountDown] = useState(
-    countDownDate - new Date().getTime()
-  );
+  const [countDown, setCountDown] = useState(countDownDate - new Date().getTime());
 
   useEffect(() => {
     const interval = setInterval(() => {

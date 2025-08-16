@@ -2,7 +2,6 @@ import React from "react";
 import { useExchangeRateGBPToIRR } from "../../hooks/useExchangeRateGBPToIRR";
 import { calculateDiscountPercentage } from "../../utilities/calculateDiscountPercentage";
 import { changeNumbersFormatEnToFa } from "../../utilities/changeNumbersFormatEnToFa";
-import { gbpCurrencyFormat } from "../../utilities/currencyFormat";
 
 interface Props {
   price: number;
@@ -10,6 +9,7 @@ interface Props {
   isLargeSize?: boolean;
   isInSlider?: boolean;
 }
+
 const ProductPrice: React.FC<Props> = ({
   price,
   discount,
@@ -22,15 +22,14 @@ const ProductPrice: React.FC<Props> = ({
     : 0;
   const irDiscountPrice = useExchangeRateGBPToIRR(discountPrice);
 
-  //style base on component position
   const textMainPriceSize = isLargeSize
     ? "text-xl md:text-3xl"
     : "text-md md:text-lg";
   const textDiscountPriceSize = isLargeSize
     ? "text-md md:text-xl"
     : "text-[12px] md:text-md";
-  const justifyContent = isInSlider && locale === "fa" ? "flex-start" : "";
-  const flexDirection = isInSlider || locale === "en" ? "row" : "row-reverse";
+  const justifyContent = isInSlider ? "flex-start" : "";
+  const flexDirection = isInSlider ? "row" : "row-reverse";
 
   return (
     <div>
@@ -44,46 +43,32 @@ const ProductPrice: React.FC<Props> = ({
               <del
                 className={`text-rose-800 dark:text-rose-200 md:text-sm ${textDiscountPriceSize}`}
               >
-                <sup className="mr-1">{locale === "en" ? "£" : ""}</sup>
-                <sub className="ml-1 text-[10px]">
-                  {locale === "fa" ? "تومان" : ""}
-                </sub>
-                {locale === "en" ? gbpCurrencyFormat(price) : irPrice}
+                {irPrice}
+                <sub className="ml-1 text-[10px]">تومان</sub>
               </del>
               <ins
                 className={`font-bold self-end no-underline mt-1 ${textMainPriceSize}`}
               >
-                <sup className="mr-1">{locale === "en" ? "£" : ""}</sup>
-                <sub className="ml-1 text-[10px]">
-                  {locale === "fa" ? "تومان" : ""}
-                </sub>
-                {locale === "en"
-                  ? gbpCurrencyFormat(discountPrice)
-                  : irDiscountPrice}
+                {irDiscountPrice}
+                <sub className="ml-1 text-[10px]">تومان</sub>
               </ins>
             </span>
             <span
               className="text-green-800 dark:text-green-200 ml-1 text-[12px] inline-block"
               style={{ direction: "ltr" }}
-            >{`(-%${
-              locale === "en" ? discount : changeNumbersFormatEnToFa(discount!)
-            })`}</span>
+            >
+              {discount ? `(-%${changeNumbersFormatEnToFa(discount)})` : null}
+            </span>
           </div>
         ) : (
           <div>
-            {isInSlider ? <div className="h-[1.4rem]"></div> : null}{" "}
-            {/* ☝slider cards (.slick-slide=>Slider component) are float and because of that, they don't accept height so, for making cards the same height, I have to do this hack*/}
+            {isInSlider ? <div className="h-[1.4rem]"></div> : null}
             <div
               className={`flex items-center ${textMainPriceSize} font-bold no-underline`}
               style={{ flexDirection }}
             >
-              <sup className="mr-1 rtl:block">{locale === "en" ? "£" : ""}</sup>
-              <span>
-                {locale === "en" ? gbpCurrencyFormat(price) : irPrice}
-              </span>
-              <sub className="ml-1 text-[10px]">
-                {locale === "fa" ? "تومان" : ""}
-              </sub>
+              <span>{irPrice}</span>
+              <sub className="ml-1 text-[10px]">تومان</sub>
             </div>
           </div>
         )}
