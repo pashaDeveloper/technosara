@@ -43,17 +43,34 @@ const categorySchema = new mongoose.Schema(
       }
     ],
 
-
+    featureGroups: [
+      {
+        name: { type: String, required: true }, // مثلا "پردازنده" یا "صفحه نمایش"
+        icon: { type: String }, 
+        fields: [
+          {
+            name: { type: String, required: true },
+            type: {
+              type: String,
+              default: "string"
+            },
+            options: [String], // برای select
+            required: { type: Boolean, default: false },
+            icon: { type: String }
+          }
+        ]
+      }
+    ],
     parentCategory: {
       type: ObjectId,
       ref: "Category",
-      default: null 
+      default: null
     },
     children: [
       {
         type: ObjectId,
-        ref: "Category",
-      },
+        ref: "Category"
+      }
     ],
     icon: {
       type: String,
@@ -83,7 +100,6 @@ categorySchema.pre("save", function (next) {
       splitStr[i].charAt(0).toUpperCase() + splitStr[i].substring(1);
   }
   this.title = splitStr.join(" ");
-
 
   next();
 });

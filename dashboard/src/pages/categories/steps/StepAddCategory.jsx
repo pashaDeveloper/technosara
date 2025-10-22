@@ -9,6 +9,7 @@ import StepIndicator from "./StepIndicator";
 import TitleStep from "./TitleStep";
 import TagsStep from "./TagsStep";
 import { useNavigate } from "react-router-dom";
+import Features from "./Features";
 
 const StepAddCategory = () => {
   const [thumbnail, setThumbnail] = useState(null);
@@ -17,7 +18,7 @@ const StepAddCategory = () => {
   const [completedSteps, setCompletedSteps] = useState({});
   const [invalidSteps, setInvalidSteps] = useState({});
   const [tags, setTags] = useState([""]);
-  const [keynotes, setKeynotes] = useState([""]);
+  const [features, setFeatures] = useState([{icon:'', title: "", content: [""] }]);
 
   const {
     register,
@@ -31,7 +32,7 @@ const StepAddCategory = () => {
   } = useForm({
     mode: "onChange"
   });
-  const totalSteps = 3;
+  const totalSteps = 4;
 
 
   const onSubmit = async (data) => {
@@ -126,6 +127,7 @@ if (data.category) {
             nextStep={nextStep}
             register={register}
             watch={watch}
+            control ={control}
             errors={errors.thumbnail}
           />
         );
@@ -138,8 +140,19 @@ if (data.category) {
             nextStep={nextStep}
           />
         );
+ case 3:
+        return (
+          <Features
+          features={features}
+            setFeatures={setFeatures}
+            register={register}
+            errors={errors}
+            prevStep={prevStep}
+            nextStep={nextStep}
+          />
+        );
 
-      case 3:
+      case 4:
         return (
           <TagsStep
             tags={tags}

@@ -281,7 +281,7 @@ const Info = () => {
                 </a>
               </div>
 
-              <div className=" flex items-center space-x-3 flex-row-reverse md:space-x-5">
+              <div className=" flex items-center gap-x-3 flex-row-reverse md:gap-x-5">
                 <div>
                   <button
                     className="bg-teal-500 relative inline-flex h-8 w-16 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75"

@@ -8,14 +8,11 @@ const remove = require("../utils/remove.util");
 
 /* add new unit */
 exports.addUnit = async (req, res) => {
-  const { title,description,category,value} = req.body;
-  console.log(req.body)
+  const { title,symbol} = req.body;
   const unit = new Unit({
     title: title,
-    description: description,
-    category:category,
-    value: value,
-    creator: req.user._id
+    symbol: symbol,
+    creator: req.admin._id
   });
 
   const result = await unit.save();
@@ -32,19 +29,47 @@ exports.addUnit = async (req, res) => {
 };
 
 /* get all units */
-exports.getUnits = async (res) => {
+exports.getUnits = async (req, res) => {
+  try {
+    const { page = 1, limit = 10, search = "" } = req.query;
 
-  const units = await Unit.find().populate([
-    "creator",
-  ]);
+    const pageNum = parseInt(page) || 1;
+    const limitNum = parseInt(limit) || 10;
+    const skip = (pageNum - 1) * limitNum;
 
-  res.status(200).json({
-    acknowledgement: true,
-    message: "Ok",
-    description: "واحد ها با موفقیت دریافت شدند",
-    data: units,
-  });
+    const query = {};
+    if (search) {
+      query.title = { $regex: search, $options: "i" }; // جستجو بر اساس عنوان واحد
+    }
+
+    const units = await Unit.find(query)
+      .skip(skip)
+      .limit(limitNum)
+      .sort({ createdAt: -1 })
+      .populate({
+        path: "creator",
+        select: "name avatar"
+      });
+
+    const total = await Unit.countDocuments(query);
+
+    return res.status(200).json({
+      acknowledgement: true,
+      message: "Ok",
+      description: "واحدها با موفقیت دریافت شدند",
+      data: units,
+      total,
+    });
+  } catch (error) {
+    console.error("Error in getUnits:", error);
+    return res.status(500).json({
+      acknowledgement: false,
+      message: "خطا در دریافت واحدها",
+      description: error.message || error.toString()
+    });
+  }
 };
+
 
 /* get a unit */
 exports.getUnit = async (req, res) => {
@@ -61,8 +86,6 @@ exports.getUnit = async (req, res) => {
 /* update unit */
 exports.updateUnit = async (req, res) => {
   let updatedUnit = req.body;
-  console.log("updatedUnit",updatedUnit)
-  console.log(req.params.id)
   await Unit.findByIdAndUpdate(req.params.id, updatedUnit);
   res.status(200).json({
     acknowledgement: true,

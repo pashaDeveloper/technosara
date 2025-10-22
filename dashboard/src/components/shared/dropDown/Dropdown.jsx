@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 
 const Dropdown = ({
   items = [],
@@ -59,14 +59,14 @@ const Dropdown = ({
       <button
         type="button"
         onClick={() => !isReadOnly && setIsOpen((prev) => !prev)}
-        className={`inline-flex justify-between items-center px-4 py-2 text-center text-sm font-medium text-gray-700 bg-white dark:!bg-[#0a2d4d] border border-gray-300 dark:border-blue-500 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 ${className} ${
-          isReadOnly ? " opacity-50" : ""
-        }`}
+        className={`inline-flex justify-between items-center px-4 py-2 text-center text-sm font-medium text-gray-700 bg-white dark:!bg-[#0a2d4d] border border-gray-300 dark:border-blue-500 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 ${className} ${isReadOnly ? " opacity-50" : ""
+          }`}
         disabled={isReadOnly}
       >
         <span className="ml-2 dark:text-gray-100 flex justify-center text-center">
           {iconOnly && selectedItem?.icon ? (
-            <div dangerouslySetInnerHTML={{ __html: selectedItem.icon }} />
+            <div className="w-6 h-6"
+              dangerouslySetInnerHTML={{ __html: selectedItem.icon }} />
           ) : (
             <div className="flex items-center gap-2 ">
               <span
@@ -96,23 +96,23 @@ const Dropdown = ({
         )}
       </button>
       {isOpen && (
-         <ul className="absolute mt-2 w-full bg-white dark:bg-gray-800 border border-gray-300 !z-50 dark:border-gray-700 rounded-md shadow-lg  p-2">
+        <ul className="absolute h-96 overflow-y-auto mt-2 w-full bg-white dark:bg-gray-800 border border-gray-300 !z-50 dark:border-gray-700 rounded-md shadow-lg  p-2">
           {filteredItems.map((item) => (
             <div
               key={item.id}
               onClick={() => handleItemSelect(item)}
               onMouseEnter={(e) => handleMouseEnter(e, item.description)}
               onMouseLeave={handleMouseLeave}
-              className={`marker:relative mt-1 bg-gray-100 hover:bg-blue-100 ${
-                iconOnly ? "flex justify-center" : "px-2 py-2"
-              } dark:bg-gray-700 dark:hover:bg-gray-900 rounded-md cursor-pointer group`}
+              className={`marker:relative mt-1 bg-gray-100 hover:bg-blue-100 ${iconOnly ? "flex justify-center" : "px-2 py-2"
+                } dark:bg-gray-700 dark:hover:bg-gray-900 rounded-md cursor-pointer group`}
             >
               {iconOnly ? (
-                item.icon
+                <div className="!w-6 !h-6"
+                  dangerouslySetInnerHTML={{ __html: item.icon }} />
               ) : (
                 <div className="flex items-center gap-2">
                   <div
-                    className="w-5 h-5"
+                    className="!w-5 !h-5"
                     dangerouslySetInnerHTML={{ __html: item.icon }}
                   />
                   <span>{item.title || item.value}</span>

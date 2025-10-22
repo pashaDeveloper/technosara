@@ -1,11 +1,11 @@
 
 /* internal import */
-const unitService = require("../services/unit.service");
+const iconService = require("../services/icon.service");
 
-/* add new unit */
-exports.addUnit = async (req, res, next) => {
+/* add new icon */
+exports.addIcon = async (req, res, next) => {
   try {
-    await unitService.addUnit(req, res);
+    await iconService.addIcon(req, res);
   } catch (error) {
     next(error);
   } finally {
@@ -13,10 +13,10 @@ exports.addUnit = async (req, res, next) => {
   }
 };
 
-/* get all units */
-exports.getUnits = async (req, res, next) => {
+/* get all icons */
+exports.getIcons = async (req, res, next) => {
   try {
-    await unitService.getUnits(req,res);
+    await iconService.getIcons(req,res);
   } catch (error) {
     next(error);
   } finally {
@@ -24,10 +24,10 @@ exports.getUnits = async (req, res, next) => {
   }
 };
 
-/* get a unit */
-exports.getUnit = async (req, res, next) => {
+/* get a icon */
+exports.getIcon = async (req, res, next) => {
   try {
-    await unitService.getUnit(req, res);
+    await iconService.getIcon(req, res);
   } catch (error) {
     next(error);
   } finally {
@@ -35,10 +35,10 @@ exports.getUnit = async (req, res, next) => {
   }
 };
 
-/* update unit */
-exports.updateUnit = async (req, res, next) => {
+/* update icon */
+exports.updateIcon = async (req, res, next) => {
   try {
-    await unitService.updateUnit(req, res);
+    await iconService.updateIcon(req, res);
   } catch (error) {
     next(error);
   } finally {
@@ -46,10 +46,10 @@ exports.updateUnit = async (req, res, next) => {
   }
 };
 
-/* delete unit */
-exports.deleteUnit = async (req, res, next) => {
+/* delete icon */
+exports.deleteIcon = async (req, res, next) => {
   try {
-    await unitService.deleteUnit(req, res);
+    await iconService.deleteIcon(req, res);
   } catch (error) {
     next(error);
   } finally {

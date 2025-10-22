@@ -15,8 +15,7 @@ exports.addCategory = async (req, res) => {
         }
       : null;
 
-    console.log("thumbnail:", thumbnail);
-    console.log("body:", body);
+
 
     const category = new Category({
       title: body.title,
@@ -84,6 +83,7 @@ exports.getCategories = async (req, res) => {
         path: "children",
         select: "title"
       })
+      
       .populate({
         path: "tags",
         select: "title"

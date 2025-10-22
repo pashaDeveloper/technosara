@@ -20,6 +20,7 @@ import Units from "./pages/units";
 import Categories from "./pages/categories";
 import Brands from "./pages/brands";
 import AddBrand from "./pages/brands/add";
+import Icons from "./pages/icons";
 import Insurancies from "./pages/insurancies";
 import AddInsurancies from "./pages/insurancies/add";
 import InsuranceCompanies from "./pages/insuranceCompanies";
@@ -55,6 +56,7 @@ function App() {
           <Route exact path="/tags" element={<Tags />} />
           <Route exact path="/categories" element={<Categories />} />
           <Route exact path="/units" element={<Units />} />
+          <Route exact path="/icons" element={<Icons />} />
           <Route exact path="/posts" element={<Posts />} />
           <Route exact path="/posts/add" element={<AddPost />} />
           <Route exact path="/blogs" element={<Blogs />} />

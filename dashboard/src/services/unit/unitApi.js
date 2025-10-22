@@ -18,8 +18,8 @@ const UnitApi = technosaraApi.injectEndpoints({
 
     // get all units
     getUnits: builder.query({
-      query: () => ({
-        url: "/unit/get-units",
+      query: ({ page = 1, limit = 5, search = "" } = {}) => ({
+        url: `/unit/get-units/?page=${page}&limit=${limit}&search=${search}`,
         method: "GET",
       }),
 

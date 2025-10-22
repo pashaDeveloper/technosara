@@ -66,19 +66,19 @@ exports.getWarranties= async (req, res) => {
       query.title = { $regex: search, $options: "i" }; 
     }
 
-const warrantys = await Warranty.find(query)
+const warranties = await Warranty.find(query)
   .skip(skip)
   .limit(limitNum)
   .sort({ createdAt: -1 })
   .populate("creator","name avatar") 
   .populate("provider", "name_fa _id")
     const total = await Warranty.countDocuments(query);
-
+console.log("warranties",warranties)
     res.status(200).json({
       acknowledgement: true,
       message: "Ok",
       description: "لیست گارانتی‌ها با موفقیت دریافت شد",
-      data: warrantys,
+      data: warranties,
       total
     });
   } catch (error) {

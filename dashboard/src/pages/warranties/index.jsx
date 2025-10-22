@@ -73,11 +73,11 @@ const Warranties = () => {
       <AddButton link="./add" />
 
       <div className="mt-8 w-full grid grid-cols-12 text-slate-400 px-4 ">
-        <div className="col-span-11 lg:col-span-3 text-sm">
+        <div className="col-span-11 lg:col-span-4 text-sm">
           <span className="hidden lg:flex">عنوان</span>
           <span className="flex lg:hidden">عنوان و توضیحات</span>
         </div>
-        <div className="lg:col-span-4 hidden lg:flex text-sm md:block">
+        <div className="lg:col-span-3 hidden lg:flex text-sm md:block">
           شرکت گارانتی
         </div>
         <div className="lg:col-span-2 hidden lg:flex text-sm md:block">
@@ -101,7 +101,7 @@ const Warranties = () => {
                 key={warranty._id}
                 className="mt-4 p-1 grid grid-cols-12 rounded-xl cursor-pointer border border-gray-200 gap-2 dark:border-white/10 dark:bg-slate-800 bg-white px-2 transition-all dark:hover:border-slate-700 hover:border-slate-100 hover:bg-green-50 dark:hover:bg-gray-800 dark:text-slate-100"
               >
-                <div className="col-span-10 lg:col-span-3 text-center flex items-center">
+                <div className="col-span-10 lg:col-span-4 text-center flex items-center">
                   <StatusIndicator isActive={warranty.status === "active"} />
                   <div className="py-2 flex justify-center items-center gap-x-2 text-right">
                     <img
@@ -133,12 +133,12 @@ const Warranties = () => {
                   </div>
                 </div>
 
-                <div className="lg:col-span-4 hidden lg:flex justify-left items-center text-right">
+                <div className="lg:col-span-3 hidden lg:flex justify-left items-center text-right">
                   {warranty.provider.name_fa}
                 </div>
 
                 <div className="lg:col-span-2 hidden lg:flex justify-left items-center text-right">
-                  {warranty.duration_months}
+                  {warranty.global_discount_percent}
                 </div>
                 <div className="lg:col-span-2 hidden lg:flex justify-left items-center text-right">
                   {warranty.duration_months}

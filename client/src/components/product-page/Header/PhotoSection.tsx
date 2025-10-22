@@ -8,9 +8,9 @@ const PhotoSection = ({ data }: { data: Product }) => {
   const [selected, setSelected] = useState<string>(data.srcUrl);
 
   return (
-    <div className="flex flex-col-reverse lg:flex-row lg:space-x-3.5">
+    <div className="flex flex-col-reverse lg:flex-row lg:gap-x-3.5">
       {data?.gallery && data.gallery.length > 0 && (
-        <div className="flex lg:flex-col space-x-3 lg:space-x-0 lg:space-y-3.5 w-full lg:w-fit items-center lg:justify-start justify-center">
+        <div className="flex lg:flex-col gap-x-3 lg:space-x-0 lg:space-y-3.5 w-full lg:w-fit items-center lg:justify-start justify-center">
           {data.gallery.map((photo, index) => (
             <button
               key={index}

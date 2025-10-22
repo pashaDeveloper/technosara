@@ -2,7 +2,7 @@
 const mongoose = require("mongoose");
 const { ObjectId } = mongoose.Schema.Types;
 const baseSchema = require("./baseSchema.model");
-const Counter = require("./counter")
+const Counter = require("./counter");
 
 const unitSchema = new mongoose.Schema(
   {
@@ -10,39 +10,28 @@ const unitSchema = new mongoose.Schema(
       type: String,
       required: [true, "عنوان واحد الزامی است"],
       trim: true,
-      maxLength: [50, "عنوان تگ نباید بیشتر از 50 کاراکتر باشد"],
+      maxLength: [50, "عنوان تگ نباید بیشتر از 50 کاراکتر باشد"]
     },
-    value: {
+    symbol: {
       type: String,
       required: [true, "مقدار عددی واحد الزامی است"],
-      min: [0, "مقدار نمی‌تواند منفی باشد"],
+      min: [0, "مقدار نمی‌تواند منفی باشد"]
     },
-    description: {
-      type: String,
-      trim: true,
-      maxLength: [300, "توضیحات تگ نباید بیشتر از 300 کاراکتر باشد"],
-    },
-    category: {
-      type: ObjectId,
-      ref: "Category",
-      required: [true, "دسته بندی  الزامی است"],
-    },
-       creator: {
+
+    creator: {
       type: ObjectId,
       ref: "Admin",
-      required: [true, "شناسه نویسنده الزامی است"],
-    },    
-       unitId: {
-      type: Number,
+      required: [true, "شناسه نویسنده الزامی است"]
+    },
+    unitId: {
+      type: Number
     },
     ...baseSchema.obj
   },
   { timestamps: true }
 );
 
-
-unitSchema.pre('save', async function(next) {
-  
+unitSchema.pre("save", async function (next) {
   try {
     const counter = await Counter.findOneAndUpdate(
       { name: "unitId" },
@@ -60,4 +49,3 @@ unitSchema.pre('save', async function(next) {
 const Unit = mongoose.model("Unit", unitSchema);
 
 module.exports = Unit;
-

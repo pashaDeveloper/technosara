@@ -1,18 +1,16 @@
 
 import Button from "@/components/shared/button/Button";
-import { useGetUnitQuery, useUpdateUnitMutation } from "@/services/unit/unitApi";
+import { useGetIconQuery, useUpdateIconMutation } from "@/services/icon/iconApi";
 import { toast } from "react-hot-toast";
 import Modal from "@/components/shared/modal/Modal";
-import React, { useEffect, useMemo, useState, useCallback } from "react";
+import  { useEffect, useMemo, useState, useCallback } from "react";
 import Edit from "@/components/icons/Edit";
 import { useDispatch } from "react-redux";
-import { setUnit } from "@/features/unit/unitSlice";
+import { setIcon } from "@/features/icon/iconSlice";
 import StatusSwitch from "@/components/shared/button/StatusSwitch";
-import { useGetCategoriesQuery } from "@/services/category/categoryApi";
- import Dropdown from "@/components/shared/dropDown/Dropdown";
-import { useForm, Controller } from "react-hook-form";
+import { useForm, } from "react-hook-form";
 
-const UpdateUnit = ({ id }) => {
+const UpdateIcon = ({ id }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOptions, setSelectedOptions] = useState([]);
   const [keynotes, setKeynotes] = useState([""]);
@@ -27,55 +25,53 @@ const UpdateUnit = ({ id }) => {
     isLoading: fetching,
     data: fetchData,
     error: fetchError,
-  } = useGetUnitQuery(id);
+  } = useGetIconQuery(id);
   const [
-    updateUnit,
+    updateIcon,
     { isLoading: isUpdateing, data: updateData, error: updateError },
-  ] = useUpdateUnitMutation();
-  const { isLoading: fetchingCategories, data: fetchCategoriesData } = useGetCategoriesQuery();
+  ] = useUpdateIconMutation();
 
-  const categories = useMemo(() => fetchCategoriesData?.data || [], [fetchCategoriesData]);
 
   useEffect(() => {
     if (isUpdateing) {
       toast.loading("در حال به‌روزرسانی ...", {
-        id: "fetchUnit",
+        id: "fetchIcon",
       });
     }
     if (fetchData) {
-      toast.success(fetchData?.message, { id: "fetchUnit" });
+      toast.success(fetchData?.message, { id: "fetchIcon" });
     }
 
     if (fetchError?.data) {
-      toast.error(fetchError?.data?.message, { id: "fetchUnit" });
+      toast.error(fetchError?.data?.message, { id: "fetchIcon" });
     }
 
     if (updateData) {
-      toast.success(updateData?.message, { id: "updateUnit" });
+      toast.success(updateData?.message, { id: "updateIcon" });
       setIsOpen(false);
     }
 
     if (updateError?.data) {
-      toast.error(updateError?.data?.message, { id: "updateUnit" });
+      toast.error(updateError?.data?.message, { id: "updateIcon" });
     }
   }, [fetching, fetchData, fetchError, isUpdateing, updateData, updateError]);
 
   useEffect(() => {
     if (fetchData) {
-      dispatch(setUnit(fetchData?.data));
+      dispatch(setIcon(fetchData?.data));
       setSelectedOptions(fetchData?.data?.robots || []);
       setKeynotes(fetchData?.data?.keynotes || [""]);
     }
   }, [fetchData, dispatch]);
 
-  const handleUpdateUnit = (data) => {
+  const handleUpdateIcon = (data) => {
     const formData = new FormData();
     formData.append("title", data.title);
     formData.append("symbol", data.symbol);
     const status = data.status ? "active" : "inactive";
     formData.append("status", status);
 
-    updateUnit({ id, body: formData });
+    updateIcon({ id, body: formData });
   };
 
 
@@ -104,7 +100,7 @@ const UpdateUnit = ({ id }) => {
           <form
             action=""
             className="text-sm w-full h-full flex flex-col gap-y-4 mb-3 p-4 overflow-y-auto text-right"
-            onSubmit={handleSubmit(handleUpdateUnit)}
+            onSubmit={handleSubmit(handleUpdateIcon)}
           >
             <div className="flex gap-4 flex-col">
               <div className="w-full flex flex-col gap-y-4 p-4 border rounded">
@@ -178,4 +174,4 @@ const UpdateUnit = ({ id }) => {
   );
 };
 
-export default UpdateUnit;
+export default UpdateIcon;

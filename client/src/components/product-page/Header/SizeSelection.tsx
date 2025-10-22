@@ -17,7 +17,7 @@ const SizeSelection = () => {
       <span className="text-sm sm:text-base text-black/60 mb-4">
         Choose Size
       </span>
-      <div className="flex items-center flex-wrap lg:space-x-3">
+      <div className="flex items-center flex-wrap lg:gap-x-3">
         {["Small", "Medium", "Large", "X-Large"].map((size, index) => (
           <button
             key={index}

@@ -24,7 +24,9 @@ export const technosaraApi = createApi({
     "InsuranceCompany",
     "Admin",
     "Insurance",
-    "Color"
+    "Color",
+    "Warranty",
+    "Icon"
   ],
   endpoints: () => ({}),
 });

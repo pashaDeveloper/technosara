@@ -60,7 +60,7 @@ const VideoCard = ({
                         -{" "}
                         {new Date(createdAt).toLocaleDateString("fa-IR")}
                       </span>
-                      <div className="flex items-center space-x-3">
+                      <div className="flex items-center gap-x-3">
                         <Image
                           alt={author || "Default alt text"}
                           title={author}

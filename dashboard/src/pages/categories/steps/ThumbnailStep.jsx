@@ -1,21 +1,44 @@
-import React, { useState } from "react";
-import { useForm } from "react-hook-form";
+import React, { useMemo, useState } from "react";
+import { Controller } from "react-hook-form";
+import Dropdown from "@/components/shared/dropDown/Dropdown";
 
 import SkeletonImage from "@/components/shared/skeleton/SkeletonImage";
 import NavigationButton from "@/components/shared/button/NavigationButton";
 import ThumbnailUpload from "@/components/shared/gallery/ThumbnailUpload";
-
+import {
+  useGetIconsQuery,
+} from "@/services/icon/iconApi";
 const ThumbnailStep = ({
   nextStep,
   errors,
   register,
   thumbnail,
+  control,
   setThumbnail,
   watch
 }) => {
+  const {
+    isLoading: fetchingIcons,
+    data: fetchIconsData,
+    error: fetchIconsError
+  } = useGetIconsQuery({
+    page: 1,
+    limit: Infinity,
+    status: "all",
+    search: ""
+  });
 
+  const icons = useMemo(
+    () =>
+      fetchIconsData?.data?.map((icon) => ({
+        id: icon._id,
+        value: icon.title,
+        icon: icon.symbol,
+        about: icon.about
+      })),
+    [fetchIconsData]
+  );
   const [thumbnailPreview, setThumbnailPreview] = useState(null);
-  const svgIcon = watch("svgIcon");
 
   return (
     <>
@@ -52,22 +75,29 @@ const ThumbnailStep = ({
           </span>
         )}
       </div>
-      <label htmlFor="svgIcon" className="flex flex-col gap-y-2">
-        کد SVG آیکون
-        <textarea
-          id="svgIcon"
-          placeholder="<svg>...</svg>"
-          className="rounded h-32 font-mono text-xs"
-          {...register("svgIcon")}
-        />
+      <label
+        htmlFor="thumbnail"
+        className="flex flex-col text-right gap-y-2"
+      >
+        آیکون
+        <div className="col-span-2">
+          <Controller
+            control={control}
+            name={`icons`}
+            defaultValue="icons"
+            render={({ field: { onChange, value } }) => (
+              <Dropdown
+                items={icons}
+                placeholder=""
+                sendId={true}
+                iconOnly={false}
+                className="w-full"
+                error={errors?.icons}
+              />
+            )}
+          />
+        </div>
       </label>
-      <div className="w-full flex justify-center">
-        {svgIcon && (
-          <div className="border rounded p-4 mt-2 flex justify-center items-center w-20 h-20">
-            <div dangerouslySetInnerHTML={{ __html: svgIcon }} />
-          </div>
-        )}
-      </div>
       <div className="flex justify-start mt-12">
         <NavigationButton direction="next" onClick={nextStep} />
       </div>

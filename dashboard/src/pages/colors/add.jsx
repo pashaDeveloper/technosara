@@ -158,7 +158,7 @@ const AddColor = () => {
               <Button
                 type="submit"
                 disabled={isAdding}
-                className={`py-3 mt-6 bg-gradient-to-r from-blue-600 to-blue-800 text-white rounded-lg hover:from-blue-700 hover:to-blue-900 transition-all ${
+                className={` py-3 ${
                   isAdding ? "opacity-50 cursor-not-allowed" : ""
                 }`}
               >

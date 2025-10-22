@@ -23,6 +23,7 @@ import insurance from "@/components/icons/Insurance";
 import Company from "@/components/icons/Company";
 import Warranty from "@/components/icons/Warranty";
 import Color from "@/components/icons/Color";
+import Icon from "@/components/icons/Icon";
 function Sidebar({ sidebarOpen, setSidebarOpen, variant = "default" }) {
   const location = useLocation();
 
@@ -80,6 +81,7 @@ function Sidebar({ sidebarOpen, setSidebarOpen, variant = "default" }) {
       ]
     },
     { title: "کاربران", icon: User, path: "/users" },
+    { title: "نماد", icon: Icon, path: "/icons" },
     { title: " دسته بندی", icon: Category, path: "/categories" },
     { title: "تگها", icon: Tag, path: "/tags" },
     { title: "واحدها", icon: Unit, path: "/units" },

@@ -33,7 +33,7 @@ export default function CartPage() {
             >
               your cart
             </h2>
-            <div className="flex flex-col lg:flex-row space-y-5 lg:space-y-0 lg:space-x-5 items-start">
+            <div className="flex flex-col lg:flex-row space-y-5 lg:space-y-0 lg:gap-x-5 items-start">
               <div className="w-full p-3.5 md:px-6 flex-col space-y-4 md:space-y-6 rounded-[20px] border border-black/10">
                 {cart?.items.map((product, idx, arr) => (
                   <React.Fragment key={idx}>
@@ -79,7 +79,7 @@ export default function CartPage() {
                     </span>
                   </div>
                 </div>
-                <div className="flex space-x-3">
+                <div className="flex gap-x-3">
                   <InputGroup className="bg-[#F0F0F0]">
                     <InputGroup.Text>
                       <MdOutlineLocalOffer className="text-black/40 text-2xl" />

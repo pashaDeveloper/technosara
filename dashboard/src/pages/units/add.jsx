@@ -1,54 +1,22 @@
-import React, { useEffect, useMemo, useState, useCallback } from "react";
-import Plus from "@/components/icons/Plus";
+import React, { useEffect, useState } from "react";
 import Button from "@/components/shared/button/Button";
 import { useAddUnitMutation } from "@/services/unit/unitApi";
 import { toast } from "react-hot-toast";
 import Modal from "@/components/shared/modal/Modal";
-import Dropdown from "@/components/shared/dropDown/Dropdown";
-import { useGetCategoriesQuery } from "@/services/category/categoryApi";
-import { useForm, Controller } from "react-hook-form";
+import { useForm } from "react-hook-form";
+import AddButton from "../../components/shared/button/AddButton";
 
-const AddUnit = ({ isOpen, onClose }) => {
-  const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
+const AddUnit = () => {
+    const [isOpen, setIsOpen] = useState(false);
 
-  const {
-    isLoading: fetchingCategories,
-    data: fetchCategoriesData,
-    error: fetchCategoriesError
-  } = useGetCategoriesQuery();
 
-  const categories = useMemo(
-    () => fetchCategoriesData?.data || [],
-    [fetchCategoriesData]
-  );
+
   const {
     register,
     handleSubmit,
-    control,
     formState: { errors }
   } = useForm();
-  useEffect(() => {
-    if (fetchingCategories) {
-      toast.loading("در حال دریافت دسته بندی ...", { id: "fetchCategories" });
-    }
 
-    if (fetchCategoriesData) {
-      toast.success(fetchCategoriesData?.description, {
-        id: "fetchCategories"
-      });
-    }
-
-    if (fetchCategoriesError) {
-      toast.error(fetchCategoriesError?.data?.description, {
-        id: "fetchCategories"
-      });
-    }
-  }, [fetchingCategories, fetchCategoriesData, fetchCategoriesError]);
-  const categoryOptions = categories?.map((category) => ({
-    id: category._id,
-    value: category.title,
-    description: category.description
-  }));
 
   const [addUnit, { isLoading: isAdding, data: addData, error: addError }] =
     useAddUnitMutation();
@@ -60,8 +28,7 @@ const AddUnit = ({ isOpen, onClose }) => {
 
     if (addData) {
       toast.success(addData?.description, { id: "addUnit" });
-      onClose();
-    }
+setIsOpen(false)    }
 
     if (addError?.data) {
       toast.error(addError?.data?.description, { id: "addUnit" });
@@ -71,21 +38,21 @@ const AddUnit = ({ isOpen, onClose }) => {
   function handleAddUnit(data) {
     const formData = {
       title: data.title,
-      value: data.value,
-      description: data.description,
-      category: data.category
+      symbol: data.symbol,
     };
-    console.log(formData);
 
     addUnit(formData);
   }
 
   return (
-    <Modal
-      isOpen={isOpen}
-      onClose={onClose}
-      className="lg:w-1/3 md:w-1/2 w-full z-50 p-4 rounded-md overflow-y-hidden"
-    >
+    <>
+      <AddButton onClick={() => setIsOpen(true)} />
+      {isOpen && (
+        <Modal
+            isOpen={isOpen}
+          onClose={() => setIsOpen(false)}
+          className="lg:w-1/3 md:w-1/2 w-full z-50 p-4 rounded-md overflow-y-hidden"
+        >
       <form
         className="text-sm w-full h-full flex flex-col gap-y-4 mb-3 p-4 overflow-y-auto"
         onSubmit={handleSubmit(handleAddUnit)}
@@ -111,88 +78,25 @@ const AddUnit = ({ isOpen, onClose }) => {
               />
             </label>
             {/* value */}
-            <label htmlFor="value" className="w-full flex flex-col gap-y-1">
-              <span className="text-sm">مقدار عددی*</span>
+            <label htmlFor="symbol" className="w-full flex flex-col gap-y-1">
+              <span className="text-sm">نماد*</span>
               <input
                 type="text"
-                name="value"
-                id="value"
+                name="symbol"
+                id="symbol"
                 step="any" // یا step="0.1"
                 required
-                {...register("value", {
-                  required: "مقدار عددی الزامی است",
+                {...register("symbol", {
+                  required: " نماد الزامی است",
                   min: {
-                    value: 0,
-                    message: "مقدار عددی نمی‌تواند منفی باشد"
+                    symbol: 0,
+                    message: "نماد نمی‌تواند منفی باشد"
                   },
                 })}
               />
             </label>
 
-            {/* description */}
-            <label
-              htmlFor="description"
-              className="w-full flex flex-col gap-y-1"
-            >
-              <span className="text-sm">توضیحات*</span>
-              <textarea
-                name="description"
-                id="description"
-                rows="4"
-                maxLength="500"
-                required
-                {...register("description", {
-                  required: "توضیحات الزامی است",
-                  minLength: {
-                    value: 3,
-                    message: "توضیحات باید حداقل ۳ کاراکتر باشد"
-                  }
-                })}
-              />
-            </label>
-            {/* بخش دسته‌بندی */}
-            <div className="flex flex-col gap-y-2 w-full ">
-              <div className="flex-1 flex items-center justify-between gap-2 gap-y-2 w-full">
-                <div className="flex flex-col flex-1">
-                  <Controller
-                    control={control}
-                    name="category"
-                    rules={{ required: "انتخاب دسته‌بندی الزامی است" }}
-                    render={({ field }) => (
-                      <div className="flex flex-col gap-y-2 w-full">
-                        <label
-                          htmlFor="category"
-                          className="flex flex-col gap-y-2"
-                        >
-                          دسته‌بندی
-                          <Dropdown
-                            items={categoryOptions}
-                            sendId={true}
-                            className="w-full h-12"
-                            handleSelect={field.onChange}
-                            value={field.value}
-                          />
-                        </label>
-                      </div>
-                    )}
-                  />
-                </div>
-                <div className="mt-7 flex justify-start">
-                  <button
-                    type="button"
-                    className=" p-1 bg-green-400 dark:bg-blue-600 text-white rounded hover:bg-green-600 dark:hover:bg-blue-400 transition-colors"
-                    aria-label="افزودن دسته‌بندی جدید"
-                  >
-                    <Plus className="!w-10 !h-10" />
-                  </button>
-                </div>
-              </div>
-              {errors.category && (
-                <span className="text-red-500 text-sm">
-                  {errors.category.message}
-                </span>
-              )}
-            </div>
+       
           </div>
           <Button type="submit" className="py-2 mt-4 mb-4 bg-black">
             ایجاد کردن
@@ -200,6 +104,8 @@ const AddUnit = ({ isOpen, onClose }) => {
         </div>
       </form>
     </Modal>
+          )}
+    </>
   );
 };
 

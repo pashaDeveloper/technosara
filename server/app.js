@@ -57,6 +57,7 @@ app.use("/api/insurance", require("./routes/insurance.route"));
 app.use("/api/warrantyCompany", require("./routes/warrantyCompany.route"));
 app.use("/api/warranty", require("./routes/warranty.route"));
 app.use("/api/color", require("./routes/color.route"));
+app.use("/api/icon", require("./routes/icon.route"));
 
 app.use(error);
 

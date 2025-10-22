@@ -1,7 +1,6 @@
 const mongoose = require("mongoose");
 const { ObjectId } = mongoose.Schema.Types;
 const Counter = require("./counter");
-const baseSchema = require("./baseSchema.model");
 
 const variantSchema = new mongoose.Schema(
   {

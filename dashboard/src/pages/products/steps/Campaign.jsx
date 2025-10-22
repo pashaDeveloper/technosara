@@ -2,78 +2,117 @@ import { useGetUnitsQuery } from "@/services/unit/unitApi";
 import React, { useEffect, useMemo, useState } from "react";
 import { toast } from "react-hot-toast";
 import Plus from "@/components/icons/Plus";
+import Trash from "@/components/icons/Trash";
+import Edit from "@/components/icons/Edit";
 import UnitPrice from "./UnitPrice";
 import { useFieldArray } from "react-hook-form";
 import NavigationButton from "@/components/shared/button/NavigationButton";
+import { useGetWarrantiesQuery } from "@/services/warranty/warrantyApi";
+import { useGetColorsQuery } from "@/services/color/colorApi";
+import { useGetInsurancesQuery } from "@/services/insurance/insuranceApi";
+import Modal from "@/components/shared/modal/Modal";
+import Dropdown from "@/components/shared/dropDown/Dropdown";
 
-// Mock hooks for other reference data (replace with actual hooks or API calls)
+// Mock queries
 const useGetDigiplusQuery = () => ({
   isLoading: false,
   data: { data: [{ _id: "dp1", name: "DigiPlus Plan 1" }] },
-  error: null,
-});
-const useGetWarrantyQuery = () => ({
-  isLoading: false,
-  data: { data: [{ _id: "w1", name: "1 Year Warranty" }] },
-  error: null,
-});
-const useGetColorQuery = () => ({
-  isLoading: false,
-  data: { data: [{ _id: "c1", name: "Red" }] },
-  error: null,
+  error: null
 });
 const useGetSellerQuery = () => ({
   isLoading: false,
   data: { data: [{ _id: "s1", name: "Seller A" }] },
-  error: null,
-});
-const useGetInsuranceQuery = () => ({
-  isLoading: false,
-  data: { data: [{ _id: "i1", name: "Insurance Plan 1" }] },
-  error: null,
+  error: null
 });
 const useGetShipmentMethodQuery = () => ({
   isLoading: false,
   data: { data: [{ _id: "sm1", name: "Express Shipping" }] },
-  error: null,
+  error: null
 });
 const useGetCreatorQuery = () => ({
   isLoading: false,
   data: { data: [{ _id: "a1", name: "Admin 1" }] },
-  error: null,
+  error: null
 });
 
 const Campaign = ({ register, errors, watch, control, prevStep, nextStep }) => {
+  // Queries
   const {
     isLoading: fetchingUnits,
     data: fetchUnitsData,
-    error: fetchUnitsError,
+    error: fetchUnitsError
   } = useGetUnitsQuery();
+
   const { data: techplusData } = useGetDigiplusQuery();
-  const { data: warrantyData } = useGetWarrantyQuery();
-  const { data: colorData } = useGetColorQuery();
+  const { data: warrantyData } = useGetWarrantiesQuery({
+    page: 1,
+    limit: Infinity,
+    search: ""
+  });
+  const { data: colorData } = useGetColorsQuery({
+    page: 1,
+    limit: Infinity,
+    search: ""
+  });
+  const { data: insuranceData } = useGetInsurancesQuery({
+    page: 1,
+    limit: Infinity,
+    search: ""
+  });
   const { data: sellerData } = useGetSellerQuery();
-  const { data: insuranceData } = useGetInsuranceQuery();
   const { data: shipmentMethodData } = useGetShipmentMethodQuery();
   const { data: creatorData } = useGetCreatorQuery();
-
   const {
     fields: variations,
     append,
-    remove,
+    remove
   } = useFieldArray({
     control,
-    name: "variations",
+    name: "variations"
   });
 
+  // Options
   const units = useMemo(() => fetchUnitsData?.data || [], [fetchUnitsData]);
-  const techplusOptions = useMemo(() => techplusData?.data || [], [techplusData]);
-  const warrantyOptions = useMemo(() => warrantyData?.data || [], [warrantyData]);
-  const colorOptions = useMemo(() => colorData?.data || [], [colorData]);
+  const techplusOptions = useMemo(
+    () => techplusData?.data || [],
+    [techplusData]
+  );
   const sellerOptions = useMemo(() => sellerData?.data || [], [sellerData]);
-  const insuranceOptions = useMemo(() => insuranceData?.data || [], [insuranceData]);
-  const shipmentMethodOptions = useMemo(() => shipmentMethodData?.data || [], [shipmentMethodData]);
+  const shipmentMethodOptions = useMemo(
+    () => shipmentMethodData?.data || [],
+    [shipmentMethodData]
+  );
   const creatorOptions = useMemo(() => creatorData?.data || [], [creatorData]);
+
+  const warenties = useMemo(
+    () =>
+      warrantyData?.data?.map((warranty) => ({
+        id: warranty._id,
+        value: warranty._id,
+        label: warranty.title_fa
+      })) || [],
+    [warrantyData]
+  );
+
+  const colors = useMemo(
+    () =>
+      colorData?.data?.map((color) => ({
+        id: color._id,
+        value: color._id,
+        label: color.title_fa
+      })) || [],
+    [colorData]
+  );
+
+  const insurances = useMemo(
+    () =>
+      insuranceData?.data?.map((insurance) => ({
+        id: insurance._id,
+        value: insurance._id,
+        label: insurance.title_fa
+      })) || [],
+    [insuranceData]
+  );
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingIndex, setEditingIndex] = useState(null);
@@ -83,10 +122,17 @@ const Campaign = ({ register, errors, watch, control, prevStep, nextStep }) => {
       toast.loading("در حال دریافت واحد ...", { id: "fetchUnits" });
     }
     if (fetchUnitsData) {
-      toast.success(fetchUnitsData?.description, { id: "fetchUnits" });
+      toast.success(fetchUnitsData?.description || "واحدها دریافت شد", {
+        id: "fetchUnits"
+      });
     }
     if (fetchUnitsError) {
-      toast.error(fetchUnitsError?.data?.description, { id: "fetchUnits" });
+      toast.error(
+        fetchUnitsError?.data?.description || "خطا در دریافت واحدها",
+        {
+          id: "fetchUnits"
+        }
+      );
     }
   }, [fetchingUnits, fetchUnitsData, fetchUnitsError]);
 
@@ -118,7 +164,7 @@ const Campaign = ({ register, errors, watch, control, prevStep, nextStep }) => {
         is_multi_warehouse: false,
         has_similar_variants: false,
         is_rural: false,
-        in_techkala_warehouse: false,
+        in_techkala_warehouse: false
       },
       techplus: "",
       warranty: "",
@@ -131,7 +177,7 @@ const Campaign = ({ register, errors, watch, control, prevStep, nextStep }) => {
       manufacture_price_not_exist: false,
       has_best_price_in_last_month: false,
       variant_badges: [],
-      creator: "",
+      creator: ""
     });
     openModal(variations.length);
   };
@@ -154,49 +200,40 @@ const Campaign = ({ register, errors, watch, control, prevStep, nextStep }) => {
                 required: "وارد کردن عنوان کمپین الزامی است",
                 minLength: {
                   value: 3,
-                  message: "عنوان کمپین باید حداقل ۳ حرف داشته باشد",
+                  message: "عنوان کمپین باید حداقل ۳ حرف داشته باشد"
                 },
                 maxLength: {
                   value: 30,
-                  message: "عنوان کمپین نباید بیشتر از ۳۰ حرف باشد",
-                },
+                  message: "عنوان کمپین نباید بیشتر از ۳۰ حرف باشد"
+                }
               })}
               className="w-full rounded border px-2 py-1"
               placeholder="عنوان کمپین فروش را وارد کنید"
               required
             />
-            <select
+            <Dropdown
               name="campaignState"
               id="campaignState"
-              {...register("campaignState", {
-                required: "وارد کردن وضعیت کمپین الزامی است",
-                minLength: {
-                  value: 3,
-                  message: "وضعیت کمپین باید حداقل ۳ حرف داشته باشد",
-                },
-                maxLength: {
-                  value: 30,
-                  message: "وضعیت کمپین نباید بیشتر از ۳۰ حرف باشد",
-                },
-              })}
-              className="w-fit rounded border px-2 py-1"
-              defaultValue="choose-state"
-              required
-            >
-              <option value="choose-state" disabled>
-                انتخاب وضعیت کمپین
-              </option>
-              <option value="new-arrival">جدید</option>
-              <option value="discount">تخفیف‌دار</option>
-              <option value="sold-out">تمام‌شده</option>
-              <option value="on-sale">در حال فروش</option>
-            </select>
+              items={[
+                { value: "جدید", label: "جدید" },
+                { value: "تخفیف‌دار", label: "تخفیف‌دار" },
+                { value: "تمام‌شده", label: "تمام‌شده" },
+                { value: "در-حال-فروش", label: "در حال فروش" }
+              ]}
+              placeholder="یک مورد انتخاب کنید"
+              className={"w-full h-12"}
+              returnType="id"
+            />
           </div>
           {errors.campaignTitle && (
-            <span className="text-red-500 text-sm">{errors.campaignTitle.message}</span>
+            <span className="text-red-500 text-sm">
+              {errors.campaignTitle.message}
+            </span>
           )}
           {errors.campaignState && (
-            <span className="text-red-500 text-sm">{errors.campaignState.message}</span>
+            <span className="text-red-500 text-sm">
+              {errors.campaignState.message}
+            </span>
           )}
           {campaignState === "discount" && (
             <input
@@ -206,14 +243,16 @@ const Campaign = ({ register, errors, watch, control, prevStep, nextStep }) => {
               {...register("discountAmount", {
                 required: "وارد کردن درصد تخفیف الزامی است",
                 min: { value: 1, message: "درصد تخفیف باید حداقل ۱ باشد" },
-                max: { value: 99, message: "درصد تخفیف نباید بیشتر از ۹۹ باشد" },
+                max: { value: 99, message: "درصد تخفیف نباید بیشتر از ۹۹ باشد" }
               })}
               className="w-full border p-2 rounded mt-2"
               placeholder="درصد تخفیف را وارد کنید"
             />
           )}
           {errors.discountAmount && (
-            <span className="text-red-500 text-sm">{errors.discountAmount.message}</span>
+            <span className="text-red-500 text-sm">
+              {errors.discountAmount.message}
+            </span>
           )}
         </label>
 
@@ -226,20 +265,20 @@ const Campaign = ({ register, errors, watch, control, prevStep, nextStep }) => {
           <div className="flex flex-col gap-y-4">
             {variations.map((field, index) => (
               <div key={field.id} className="flex items-center gap-x-2">
-                <span>واریانت {index + 1}</span>
+                <span>نسخه {index + 1}</span>
                 <button
                   type="button"
-                  className="p-1 rounded bg-blue-500 text-white"
+                  className="bg-blue-100 dark:bg-green-100 border border-blue-900 dark:border-green-900 text-blue-900 dark:text-green-900 py-1 rounded flex flex-row gap-x-1 items-center px-2 w-fit text-xs"
                   onClick={() => openModal(index)}
                 >
-                  ویرایش
+                  <Edit className="w-4 h-4" /> ویرایش
                 </button>
                 <button
                   type="button"
-                  className="p-1 rounded bg-red-500 text-white"
+                  className="bg-red-100  border border-red-900  text-red-900  py-1 rounded flex flex-row gap-x-1 items-center px-2 w-fit text-xs"
                   onClick={() => remove(index)}
                 >
-                  حذف
+                  <Trash className="w-4 h-4" /> حذف
                 </button>
               </div>
             ))}
@@ -254,49 +293,24 @@ const Campaign = ({ register, errors, watch, control, prevStep, nextStep }) => {
         </label>
       </div>
 
-      {/* Modal */}
-      {isModalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white dark:bg-gray-800 rounded-lg p-6 max-w-3xl w-full max-h-[80vh] overflow-y-auto">
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-lg font-semibold">
-                {editingIndex !== null ? "ویرایش واریانت" : "افزودن واریانت"}
-              </h2>
-              <button
-                type="button"
-                className="text-gray-500 hover:text-red-500"
-                onClick={closeModal}
-              >
-                ✕
-              </button>
-            </div>
-            <UnitPrice
-              control={control}
-              index={editingIndex !== null ? editingIndex : variations.length - 1}
-              remove={remove}
-              errors={errors}
-              units={units}
-              watch={watch}
-              techplusOptions={techplusOptions}
-              warrantyOptions={warrantyOptions}
-              colorOptions={colorOptions}
-              sellerOptions={sellerOptions}
-              insuranceOptions={insuranceOptions}
-              shipmentMethodOptions={shipmentMethodOptions}
-              creatorOptions={creatorOptions}
-            />
-            <div className="flex justify-end mt-4">
-              <button
-                type="button"
-                className="bg-blue-500 text-white px-4 py-2 rounded"
-                onClick={closeModal}
-              >
-                بستن
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      <Modal isOpen={isModalOpen} onClose={closeModal} className="lg:w-2/3 md:h-3/4">
+        <UnitPrice
+          control={control}
+          index={editingIndex !== null ? editingIndex : variations.length - 1}
+          remove={remove}
+          errors={errors}
+          units={units}
+          watch={watch}
+          techplusOptions={techplusOptions}
+          warrantyOptions={warenties}
+          colorOptions={colors}
+          sellerOptions={sellerOptions}
+          insuranceOptions={insurances}
+          shipmentMethodOptions={shipmentMethodOptions}
+          creatorOptions={creatorOptions}
+          onClose={closeModal} // Pass onClose to UnitPrice
+        />
+      </Modal>
 
       {/* Navigation Buttons */}
       <div className="flex justify-between mt-12">

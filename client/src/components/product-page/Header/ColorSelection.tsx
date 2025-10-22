@@ -36,7 +36,7 @@ const ColorSelection = () => {
       <span className="text-sm sm:text-base text-black/60 mb-4">
         Select Colors
       </span>
-      <div className="flex items-center flex-wrap space-x-3 sm:space-x-4">
+      <div className="flex items-center flex-wrap gap-x-3 sm:space-x-4">
         {colorsData.map((color, index) => (
           <button
             key={index}

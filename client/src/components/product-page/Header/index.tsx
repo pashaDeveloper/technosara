@@ -38,7 +38,7 @@ const Header = ({ data }: { data: Product }) => {
               <span className="text-black/60">/5</span>
             </span>
           </div>
-          <div className="flex items-center space-x-2.5 sm:space-x-3 mb-5">
+          <div className="flex items-center space-x-2.5 sm:gap-x-3 mb-5">
             {data.discount.percentage > 0 ? (
               <span className="font-bold text-black text-2xl sm:text-[32px]">
                 {`$${Math.round(
